@@ -5,6 +5,7 @@ import { connectDB } from "./lib/db.js";
 // Importing the routes
 import authRoutes from "./routes/auth.routes.js";
 import productRoutes from "./routes/product.routes.js";
+import cartRoutes from "./routes/cart.routes.js";
 
 const PORT = process.env.PORT || 5000;
 const app = express();
@@ -14,6 +15,7 @@ connectDB();
 
 app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
+app.use("/api/cart", cartRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
