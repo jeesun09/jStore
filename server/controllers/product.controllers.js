@@ -79,12 +79,11 @@ export const deleteProduct = async (req, res) => {
       const publicId = product.image.split("/").pop().split(".")[0]; //this will get the id of the image
       try {
         await cloudinary.uploader.destroy(`products/${publicId}`);
-        console.log("Image deleted from cloudinary");
       } catch (error) {
         console.log("Error in deleting image from cloudinary: ", error.message);
       }
     }
-    await product.findByIdAndDelete(req.params.id);
+    await Product.findByIdAndDelete(req.params.id);
 
     res.status(200).json({ message: "Product deleted successfully" });
   } catch (error) {
@@ -156,11 +155,15 @@ export const toggleFeaturedProduct = async (req, res) => {
       .json({ message: "Server Error in toggling featured product" });
   }
 };
+
 async function updateFeaturedProductsInRedis() {
   try {
     const featuredProducts = await Product.find({ isFeatured: true }).lean(); //lean() is gonna return a plain JS object instead of a mongoose document, which is good for performance
     await redis.set("featured_products", JSON.stringify(featuredProducts));
   } catch (error) {
-    console.log("Error in updating featured products in redis: ", error.message);
+    console.log(
+      "Error in updating featured products in redis: ",
+      error.message
+    );
   }
 }
