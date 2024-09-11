@@ -1,13 +1,13 @@
 import CategoryItem from "../components/CategoryItem";
 
 const categories = [
-  { href: "/jeans", name: "Jeans", imgUrl: "/images/jeans.jpg" },
-  { href: "/tshirts", name: "T-shirts", imgUrl: "/images/tshirts.jpg" },
+  { href: "/jean", name: "Jeans", imgUrl: "/images/jeans.jpg" },
+  { href: "/tshirt", name: "T-shirts", imgUrl: "/images/tshirts.jpg" },
   { href: "/shoes", name: "Shoes", imgUrl: "/images/shoes.jpg" },
   { href: "/glasses", name: "Glasses", imgUrl: "/images/glasses.png" },
-  { href: "/jackets", name: "Jackets", imgUrl: "/images/jackets.jpg" },
-  { href: "/suits", name: "Suits", imgUrl: "/images/suits.jpg" },
-  { href: "/bags", name: "Bags", imgUrl: "/images/bags.jpg" },
+  { href: "/jacket", name: "Jackets", imgUrl: "/images/jackets.jpg" },
+  { href: "/suit", name: "Suits", imgUrl: "/images/suits.jpg" },
+  { href: "/bag", name: "Bags", imgUrl: "/images/bags.jpg" },
 ];
 
 const HomePage = () => {
