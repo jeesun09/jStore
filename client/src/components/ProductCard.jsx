@@ -1,13 +1,24 @@
 import { ShoppingCart } from "lucide-react";
 import PropTypes from "prop-types";
+import { useUserStore } from "../store/useUserStore";
+import toast from "react-hot-toast";
+import { useCartStore } from "../store/useCartStore";
 
 const ProductCard = ({ product }) => {
+  const { user } = useUserStore();
+  const { addToCart } = useCartStore();
+
   const handleAddToCart = () => {
-    console.log("Add to cart clicked");
+    if (!user) {
+      toast.error("Please login to add to cart", { id: "login" });
+      return;
+    } else {
+      addToCart(product);
+    }
   };
   return (
     <div className="flex w-full relative flex-col overflow-hidden rounded-lg border border-gray-700 shadow-lg">
-      <div className="relative mx-3 mt-3 flex h-60 overflow-hidden rounded-xl">
+      <div className="relative mx-3 mt-3 flex overflow-hidden rounded-xl">
         <img
           className="object-cover w-full"
           src={product.image}
@@ -28,8 +39,7 @@ const ProductCard = ({ product }) => {
           </p>
         </div>
         <button
-          className="flex items-center justify-center rounded-lg bg-emerald-600 px-5 py-2.5 text-center text-sm font-medium
-					 text-white hover:bg-emerald-700 focus:outline-none focus:ring-4 focus:ring-emerald-300"
+          className="flex items-center justify-center rounded-lg bg-emerald-600 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-emerald-700 focus:outline-none focus:ring-4 focus:ring-emerald-300"
           onClick={handleAddToCart}
         >
           <ShoppingCart size={22} className="mr-2" />

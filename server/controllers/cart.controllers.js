@@ -79,7 +79,7 @@ export const getCartProducts = async (req, res) => {
       );
       return { ...product.toJSON(), quantity: item.quantity };
     });
-    res.json(cartItems);
+    res.json({ cartItems });
   } catch (error) {
     console.log("Error in getCartProducts controller: ", error);
     res

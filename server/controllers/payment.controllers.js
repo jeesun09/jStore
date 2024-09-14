@@ -5,13 +5,14 @@ import Order from "../models/order.model.js";
 export const createCheckoutSession = async (req, res) => {
   try {
     const { products, couponCode } = req.body;
+
     if (!Array.isArray(products) || products.length === 0) {
       return res.status(400).json({ message: "Products array is required" });
     }
     let totalAmount = 0;
     const lineItems = products.map((product) => {
       const amount = Math.round(product.price * 100); // Stripe requires the price in cents
-      totalAmount += amount;
+      totalAmount += amount * product.quantity;
 
       return {
         price_data: {
@@ -22,6 +23,7 @@ export const createCheckoutSession = async (req, res) => {
           },
           unit_amount: amount,
         },
+        quantity: product.quantity || 1,
       };
     });
     let coupon = null;
@@ -42,7 +44,7 @@ export const createCheckoutSession = async (req, res) => {
       line_items: lineItems,
       mode: "payment",
       success_url: `${process.env.CLIENT_URL}/purchase-success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${process.env.CLIENT_URL}/purchase-failed`,
+      cancel_url: `${process.env.CLIENT_URL}/purchase-cancel`,
       discounts: coupon
         ? [{ coupon: await createStripeCoupon(coupon.discountPercentage) }]
         : [],
@@ -64,7 +66,9 @@ export const createCheckoutSession = async (req, res) => {
     res.status(200).json({ id: session.id, totalAmount: totalAmount / 100 });
   } catch (error) {
     console.log("Error creating checkout session", error);
-    res.status(400).json({ message: "Session creation failed", error: error.message });
+    res
+      .status(400)
+      .json({ message: "Session creation failed", error: error.message });
   }
 };
 
@@ -112,6 +116,7 @@ async function createNewCoupon(userId) {
     code: "GIFT" + Math.random().toString(36).substring(2, 8).toUpperCase(),
     discountPercentage: 10,
     expirationDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days from now
+    userId: userId,
   });
   await newCoupon.save();
   return newCoupon;
